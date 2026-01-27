@@ -1,0 +1,248 @@
+/* ==================================================
+   COLOR VARIABLES
+================================================== */
+:root {
+  --bg-main-1: #e0f2fe;
+  --bg-main-2: #ede9fe;
+  --bg-main-3: #fef3c7;
+  --bg-main-4: #dcfce7;
+
+  --text-color: #1f2933;
+  --secondary-text: #4b5563;
+  --primary-color: #2563eb;
+
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --border-color: #e5e7eb;
+}
+
+/* Dark mode variables */
+body.dark {
+  --bg-main-1: #020617;
+  --bg-main-2: #020617;
+  --bg-main-3: #1e293b;
+  --bg-main-4: #0f172a;
+
+  --text-color: #f8fafc;
+  --secondary-text: #cbd5f5;
+  --primary-color: #60a5fa;
+
+  --card-bg: rgba(30, 41, 59, 0.9);
+  --border-color: #334155;
+}
+
+/* ==================================================
+   BODY + BACKGROUND ANIMATION
+================================================== */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-color);
+  line-height: 1.7;
+
+  background: linear-gradient(
+    270deg,
+    var(--bg-main-1),
+    var(--bg-main-2),
+    var(--bg-main-3),
+    var(--bg-main-4)
+  );
+  background-size: 800% 800%;
+  animation: gradientFlow 18s ease infinite;
+
+  transition: color 0.4s;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ==================================================
+   NAVBAR
+================================================== */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px 40px;
+  background-color: var(--card-bg);
+  backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+nav h2 {
+  margin: 0;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  color: var(--secondary-text);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s;
+}
+
+/* Navbar hover underline (interactive) */
+nav ul li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.3s;
+}
+
+nav ul li:hover {
+  color: var(--primary-color);
+}
+
+nav ul li:hover::after {
+  width: 100%;
+}
+
+/* ==================================================
+   SECTIONS
+================================================== */
+section {
+  max-width: 1000px;
+  margin: auto;
+  padding: 60px 20px;
+}
+
+/* ==================================================
+   TEXT STYLING
+================================================== */
+h1 {
+  font-size: 3.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+p {
+  font-size: 1.15rem;
+  color: var(--secondary-text);
+  max-width: 800px;
+}
+
+/* ==================================================
+   CARD LAYOUT (FEATURES & TECHNOLOGIES)
+================================================== */
+section ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+section ul li {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+
+  padding: 30px;
+  border-radius: 18px;
+  border: 1px solid var(--border-color);
+
+  font-size: 1.05rem;
+  color: var(--text-color);
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* Card hover interaction */
+section ul li:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow:
+    0 22px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* Decorative icon-like prefix */
+section ul li::before {
+  content: "✓ ";
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* ==================================================
+   FORM (CALL TO ACTION)
+================================================== */
+form {
+  margin-top: 25px;
+}
+
+input[type="email"] {
+  padding: 12px;
+  width: 260px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input[type="email"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+/* Button interaction */
+input[type="submit"] {
+  padding: 12px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 6px;
+
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+input[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ==================================================
+   FOOTER
+================================================== */
+footer {
+  text-align: center;
+  padding: 25px;
+  border-top: 1px solid var(--border-color);
+  color: var(--secondary-text);
+  background-color: var(--card-bg);
+  backdrop-filter: blur(8px);
+}
