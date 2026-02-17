@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exotic Motors | The Ultimate Collection</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        /* --- CSS ARCHITECTURE & VARIABLES --- */
+        :root {
+            --primary: #ff3e3e;
+            --primary-dark: #cc0000;
+            --bg-light: #f8fafc;
+            --bg-dark: #020617;
+            --card-light: #ffffff;
+            --card-dark: #0f172a;
+            --text-light: #1e293b;
+            --text-dark: #f8fafc;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- GLOBAL STYLES --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        h1, h2, h3, .navbar-brand {
+            font-family: 'Syncopate', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 5px; }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            padding: 20px 0;
+            background: transparent;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary) !important;
+            letter-spacing: 2px;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-left: 25px;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0;
+            width: 0; height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), 
+                        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 12vw, 7rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .btn-cta {
+            padding: 20px 45px;
+            border-radius: 0;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            letter-spacing: 2px;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .btn-cta:hover {
+            background: #fff;
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        /* --- SHOWROOM ARCHITECTURE --- */
+        #showroom {
+            display: none;
+            padding: 100px 0;
+        }
+
+        .section-header {
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-weight: 800;
+            font-size: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px; left: 0;
+            width: 60px; height: 5px;
+            background: var(--primary);
+        }
+
+        /* --- FILTERING & SEARCH --- */
+        .controls-wrapper {
+            background: var(--card-light);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
+        }
+
+        .dark-mode .controls-wrapper {
+            background: var(--card-dark);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 55px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px; top: 18px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: transparent;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* --- CAR CARDS --- */
+        .car-card {
+            background: var(--card-light);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: var(--transition);
+            height: 100%;
+            position: relative;
+        }
+
+        .dark-mode .car-card { background: var(--card-dark); border-color: var(--glass-border); }
+
+        .car-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        }
+
+        .car-image-container {
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .car-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .car-card:hover img { transform: scale(1.1); }
+
+        .price-tag {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: var(--primary);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .card-content { padding: 30px; }
+
+        .card-brand {
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        /* --- MODAL DETAILED VIEW --- */
+        .modal-xl { max-width: 1200px; }
+        .modal-content {
+            border-radius: 40px;
+            border: none;
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+
+        .dark-mode .modal-content { background: var(--bg-dark); color: white; }
+
+        .modal-body { padding: 0; }
+
+        .spec-container {
+            padding: 50px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .spec-item {
+            background: rgba(0,0,0,0.03);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .dark-mode .spec-item { background: rgba(255,255,255,0.05); }
+
+        .spec-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .spec-item label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #888;
+        }
+
+        .spec-item span {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        /* --- FOOTER & CONTACT --- */
+        #contact {
+            padding: 100px 0;
+            background: var(--bg-dark);
+            color: white;
+        }
+
+        .footer-bottom {
+            background: #000;
+            padding: 40px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* --- ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body id="top">
+
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#top">EXOTIC MOTORS</a>
+            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#top">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#showroom" id="navShowroom">Showroom</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item ms-lg-4">
+                        <button class="btn btn-outline-light btn-sm rounded-circle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-inner">
+            <span class="badge bg-danger mb-3 animate__animated animate__fadeInDown">EST. 1998</span>
+            <h1 class="hero-title animate__animated animate__fadeInUp">BEYOND<br>LIMITS</h1>
+            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">The definitive destination for luxury performance automotive engineering.</p>
+            <div class="animate__animated animate__fadeInUp animate__delay-1s">
+                <button class="btn-cta" onclick="initShowroom()">ENTER SHOWROOM</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="showroom">
+        <div class="container">
+            
+            <div class="section-header text-center reveal">
+                <h2>THE COLLECTION</h2>
+                <p class="text-muted">Explore our curated selection of high-performance machines.</p>
+            </div>
+
+            <div class="controls-wrapper reveal">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="carSearchInput" placeholder="Search by model, engine, or keywords...">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="filter-group justify-content-lg-end">
+                            <button class="filter-btn active" data-category="all">All Models</button>
+                            <button class="filter-btn" data-category="ferrari">Ferrari</button>
+                            <button class="filter-btn" data-category="lamborghini">Lamborghini</button>
+                            <button class="filter-btn" data-category="mclaren">McLaren</button>
+                            <button class="filter-btn" data-category="porsche">Porsche</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-5" id="mainGalleryGrid">
+                
+                <div class="col-xl-4 col-md-6 filter-item reveal" data-category="ferrari" data-search="ferrari sf90 stradale hybrid v8 red">
+                    <div class="car-card" onclick="launchModal(this)"
+                         data-name="SF90 Stradale"
+                         data-brand="Ferrari"
+                         data-price="$528,000"
+                         data-engine="4.0L V8 Twin-Turbo Hybrid"
+                         data-hp="986 HP"
+                         data-top="211 MPH"
+                         data-zero="2.5s"
+                         data-weight="1,570 kg"
+                         data-desc="The SF90 Stradale is the first ever Ferrari to feature PHEV (Plug-in Hybrid Electric Vehicle) architecture which sees the internal combustion engine integrated with three electric motors."
+                         data-img="https://images.unsplash.com/photo-1592198084033-aade902d1aae?auto=format&fit=crop&w=1200">
+                        <div class="car-image-container">
+                            <span class="price-tag">$528,000</span>
+                            <img src="https://images.unsplash.com/photo-1592198084033-aade902d1aae?auto=format&fit=crop&w=800">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-brand">Ferrari</span>
+                            <h3 class="card-title">SF90 Stradale</h3>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-bolt me-1"></i> Hybrid</span>
+                                <span><i class="fas fa-tachometer-alt me-1"></i> 211 MPH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-md-6 filter-item reveal" data-category="lamborghini" data-search="lamborghini aventador svj v12 purple yellow">
+                    <div class="car-card" onclick="launchModal(this)"
+                         data-name="Aventador SVJ"
+                         data-brand="Lamborghini"
+                         data-price="$517,000"
+                         data-engine="6.5L V12"
+                         data-hp="770 HP"
+                         data-top="217 MPH"
+                         data-zero="2.8s"
+                         data-weight="1,525 kg"
+                         data-desc="The Aventador SVJ is designed to perfectly blend cutting-edge technology with an extraordinary design. Its V12 engine is the most powerful naturally aspirated engine produced by Lamborghini."
+                         data-img="https://images.squarespace-cdn.com/content/v1/57421e7040261db902b7d3af/1639943459739-XU13KR70VB12OUXDDCP6/AZB_1714-Edit.jpg?format=2500w">
+                        <div class="car-image-container">
+                            <span class="price-tag">$517,000</span>
+                            <img src="https://images.squarespace-cdn.com/content/v1/57421e7040261db902b7d3af/1639943459739-XU13KR70VB12OUXDDCP6/AZB_1714-Edit.jpg?format=2500w">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-brand">Lamborghini</span>
+                            <h3 class="card-title">Aventador SVJ</h3>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-fire me-1"></i> V12</span>
+                                <span><i class="fas fa-tachometer-alt me-1"></i> 217 MPH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-md-6 filter-item reveal" data-category="mclaren" data-search="mclaren 720s spider blue orange v8">
+                    <div class="car-card" onclick="launchModal(this)"
+                         data-name="720S Spider"
+                         data-brand="McLaren"
+                         data-price="$315,000"
+                         data-engine="4.0L V8 Twin-Turbo"
+                         data-hp="710 HP"
+                         data-top="212 MPH"
+                         data-zero="2.9s"
+                         data-weight="1,332 kg"
+                         data-desc="The McLaren 720S is a supercar that challenges preconceptions. Lighter, stronger, and faster. It's the most accomplished supercar McLaren has ever built."
+                         data-img="https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=1200">
+                        <div class="car-image-container">
+                            <span class="price-tag">$315,000</span>
+                            <img src="https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=800">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-brand">McLaren</span>
+                            <h3 class="card-title">720S Spider</h3>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-wind me-1"></i> Turbo</span>
+                                <span><i class="fas fa-tachometer-alt me-1"></i> 212 MPH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-md-6 filter-item reveal" data-category="porsche" data-search="porsche 911 gt3 rs silver black racing">
+                    <div class="car-card" onclick="launchModal(this)"
+                         data-name="911 GT3 RS"
+                         data-brand="Porsche"
+                         data-price="$223,800"
+                         data-engine="4.0L Flat-6"
+                         data-hp="518 HP"
+                         data-top="184 MPH"
+                         data-zero="3.0s"
+                         data-weight="1,450 kg"
+                         data-desc="The 911 GT3 RS is a street-legal racing car. With its massive wing and high-revving naturally aspirated engine, it is the purest expression of Porsche performance."
+                         data-img="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200">
+                        <div class="car-image-container">
+                            <span class="price-tag">$223,800</span>
+                            <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-brand">Porsche</span>
+                            <h3 class="card-title">911 GT3 RS</h3>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-road me-1"></i> Track</span>
+                                <span><i class="fas fa-tachometer-alt me-1"></i> 184 MPH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-md-6 filter-item reveal" data-category="ferrari" data-search="ferrari f8 tributo v8 turbo red spider">
+                    <div class="car-card" onclick="launchModal(this)"
+                         data-name="F8 Tributo"
+                         data-brand="Ferrari"
+                         data-price="$280,000"
+                         data-engine="3.9L V8 Twin-Turbo"
+                         data-hp="710 HP"
+                         data-top="211 MPH"
+                         data-zero="2.9s"
+                         data-weight="1,435 kg"
+                         data-desc="The F8 Tributo is the new mid-rear-engined sports car that represents the highest expression of the Prancing Horse’s classic two-seater berlinetta."
+                         data-img="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200">
+                        <div class="car-image-container">
+                            <span class="price-tag">$280,000</span>
+                            <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-brand">Ferrari</span>
+                            <h3 class="card-title">F8 Tributo</h3>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-fire me-1"></i> V8</span>
+                                <span><i class="fas fa-tachometer-alt me-1"></i> 211 MPH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-md-6 filter-item reveal" data-category="lamborghini" data-search="lamborghini huracan sto v10 blue orange">
+                    <div class="car-card" onclick="launchModal(this)"
+                         data-name="Huracán STO"
+                         data-brand="Lamborghini"
+                         data-price="$327,000"
+                         data-engine="5.2L V10"
+                         data-hp="631 HP"
+                         data-top="193 MPH"
+                         data-zero="3.0s"
+                         data-weight="1,339 kg"
+                         data-desc="A road-legal super sports car with a racing heart. The Huracán STO provides all the feel and technology of a genuine race car in a road-legal model."
+                         data-img="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/0_facelift_2025/model_details/huracan/sto/img_txt/Connect.jpg">
+                        <div class="car-image-container">
+                            <span class="price-tag">$327,000</span>
+                            <img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/0_facelift_2025/model_details/huracan/sto/img_txt/Connect.jpg">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-brand">Lamborghini</span>
+                            <h3 class="card-title">Huracán STO</h3>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-gem me-1"></i> V10</span>
+                                <span><i class="fas fa-tachometer-alt me-1"></i> 193 MPH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="services" class="py-5" style="display:none;">
+        <div class="container py-5">
+            <div class="section-header text-center reveal">
+                <h2>Our Services</h2>
+                <p>Comprehensive care for high-value automotive investments.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 reveal">
+                    <div class="p-5 border rounded-4 text-center">
+                        <i class="fas fa-tools fa-3x text-danger mb-4"></i>
+                        <h4>Master Service</h4>
+                        <p>Specialized maintenance for exotic engines and transmission systems.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal">
+                    <div class="p-5 border rounded-4 text-center">
+                        <i class="fas fa-shield-alt fa-3x text-danger mb-4"></i>
+                        <h4>Global Logistics</h4>
+                        <p>Fully insured, climate-controlled transport to any global destination.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal">
+                    <div class="p-5 border rounded-4 text-center">
+                        <i class="fas fa-hand-holding-usd fa-3x text-danger mb-4"></i>
+                        <h4>Brokerage</h4>
+                        <p>Sourcing and acquisition services for ultra-rare collector cars.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5 reveal">
+                    <h2 class="mb-4">Inquire Now</h2>
+                    <p class="mb-5 text-muted">Begin your journey with a private consultation. Our team is available 24/7 for our elite clients.</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><i class="fas fa-map-marker-alt text-danger me-3"></i> 101 Performance Blvd, Silicon Valley, CA</li>
+                        <li class="mb-3"><i class="fas fa-phone text-danger me-3"></i> +1 (800) EXOTICS</li>
+                        <li class="mb-3"><i class="fas fa-envelope text-danger me-3"></i> concierge@exoticmotors.com</li>
+                    </ul>
+                </div>
+                <div class="col-lg-7 reveal">
+                    <div class="p-5 rounded-4" style="background: rgba(255,255,255,0.05);">
+                        <form class="row g-4">
+                            <div class="col-md-6">
+                                <label class="small text-uppercase fw-bold mb-2">First Name</label>
+                                <input type="text" class="form-control bg-transparent text-white border-secondary py-3">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-uppercase fw-bold mb-2">Last Name</label>
+                                <input type="text" class="form-control bg-transparent text-white border-secondary py-3">
+                            </div>
+                            <div class="col-12">
+                                <label class="small text-uppercase fw-bold mb-2">Subject</label>
+                                <select class="form-select bg-transparent text-white border-secondary py-3">
+                                    <option class="text-dark">Acquisition Inquiry</option>
+                                    <option class="text-dark">Service Booking</option>
+                                    <option class="text-dark">Media/Press</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="small text-uppercase fw-bold mb-2">Message</label>
+                                <textarea class="form-control bg-transparent text-white border-secondary py-3" rows="4"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-danger w-100 py-3 fw-bold">SUBMIT INQUIRY</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-bottom">
+        <div class="container text-center">
+            <div class="mb-4">
+                <a href="#" class="text-decoration-none mx-2"><i class="fab fa-instagram fa-lg"></i></a>
+                <a href="#" class="text-decoration-none mx-2"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-decoration-none mx-2"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+            <p>&copy; 2026 Exotic Motors International. All Rights Reserved. Engineered by GEMINI.</p>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="carDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row g-0">
+                        <div class="col-lg-6">
+                            <img src="" id="modalImg" class="w-100 h-100" style="object-fit: cover; min-height: 450px;">
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="spec-container">
+                                <div class="d-flex justify-content-between align-items-start mb-4">
+                                    <div>
+                                        <span id="modalBrand" class="card-brand"></span>
+                                        <h2 id="modalName" class="fw-black m-0"></h2>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                
+                                <p id="modalDesc" class="text-muted mb-4"></p>
+
+                                <div class="spec-grid">
+                                    <div class="spec-item">
+                                        <i class="fas fa-cogs"></i>
+                                        <label>Engine</label>
+                                        <span id="specEngine"></span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-horse-head"></i>
+                                        <label>Power Output</label>
+                                        <span id="specHp"></span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        <label>Max Velocity</label>
+                                        <span id="specTop"></span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-stopwatch"></i>
+                                        <label>0-60 MPH</label>
+                                        <span id="specZero"></span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-3">
+                                    <button class="btn btn-danger flex-grow-1 py-3 fw-bold">RESERVE VEHICLE</button>
+                                    <button class="btn btn-outline-secondary px-4"><i class="fas fa-heart"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * INITIALIZATION AND UI CONTROLS
+         */
+        
+        // Handle Navbar Background on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            
+            // Trigger Reveal Animations
+            handleScrollReveal();
+        });
+
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeBtn.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        });
+
+        // Entrance Logic
+        function initShowroom() {
+            const showroom = document.getElementById('showroom');
+            const services = document.getElementById('services');
+            showroom.style.display = 'block';
+            services.style.display = 'block';
+            
+            window.scrollTo({
+                top: showroom.offsetTop - 80,
+                behavior: 'smooth'
+            });
+            
+            // Small delay to ensure display:block has happened before calculating scroll reveal
+            setTimeout(handleScrollReveal, 100);
+        }
+
+        /**
+         * SEARCH AND FILTERING LOGIC
+         */
+
+        const searchInput = document.getElementById('carSearchInput');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const carCards = document.querySelectorAll('.filter-item');
+
+        // Combined Filter Handler
+        function updateGallery() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeCategory = document.querySelector('.filter-btn.active').getAttribute('data-category');
+
+            carCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                const cardSearchData = card.getAttribute('data-search').toLowerCase();
+                
+                const matchesSearch = cardSearchData.includes(searchTerm);
+                const matchesCategory = (activeCategory === 'all' || cardCategory === activeCategory);
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'block';
+                    card.classList.add('animate__animated', 'animate__fadeIn');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', updateGallery);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                updateGallery();
+            });
+        });
+
+        /**
+         * MODAL DATA POPULATION
+         */
+        
+        const infoModal = new bootstrap.Modal(document.getElementById('carDetailsModal'));
+
+        function launchModal(card) {
+            // Mapping UI elements to Data attributes
+            document.getElementById('modalName').innerText = card.getAttribute('data-name');
+            document.getElementById('modalBrand').innerText = card.getAttribute('data-brand');
+            document.getElementById('modalDesc').innerText = card.getAttribute('data-desc');
+            document.getElementById('specEngine').innerText = card.getAttribute('data-engine');
+            document.getElementById('specHp').innerText = card.getAttribute('data-hp');
+            document.getElementById('specTop').innerText = card.getAttribute('data-top');
+            document.getElementById('specZero').innerText = card.getAttribute('data-zero');
+            document.getElementById('modalImg').src = card.getAttribute('data-img');
+            
+            infoModal.show();
+        }
+
+        /**
+         * SCROLL REVEAL UTILITY
+         */
+        function handleScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize Scroll Reveal on Load
+        window.onload = handleScrollReveal;
+
+    </script>
+</body>
+</html>
